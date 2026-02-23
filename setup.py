@@ -54,14 +54,11 @@ install_requires = [
 extras = {}
 
 # Hugging Face specific dependencies
-extras["transformers"] = ["transformers[sklearn,sentencepiece]>=4.17.0"]
-extras["diffusers"] = ["diffusers>=0.23.0"]
+extras["transformers"] = ["transformers[sklearn,sentencepiece]>=5.0.0"]
+extras["diffusers"] = ["diffusers>=0.36.0"]
 
 # framework specific dependencies
 extras["torch"] = ["torch>=1.8.0", "torchaudio"]
-
-# TODO: Remove upper bound of TF 2.11 once transformers release contains this fix: https://github.com/huggingface/evaluate/pull/372
-extras["tensorflow"] = ["tensorflow>=2.4.0,<2.11"]
 
 # MMS Server dependencies
 extras["mms"] = ["multi-model-server>=1.1.4", "retrying"]
@@ -88,7 +85,7 @@ extras["quality"] = [
     "flake8>=3.8.3",
 ]
 
-extras["dev"] = extras["transformers"] + extras["mms"] + extras["torch"] + extras["tensorflow"] + extras["diffusers"]
+extras["dev"] = extras["transformers"] + extras["mms"] + extras["torch"] + extras["diffusers"]
 setup(
     name="sagemaker-huggingface-inference-toolkit",
     version=VERSION,

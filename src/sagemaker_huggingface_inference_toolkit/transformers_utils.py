@@ -20,7 +20,7 @@ from typing import Optional
 
 from huggingface_hub import HfApi, login, snapshot_download
 from transformers import AutoTokenizer, pipeline
-from transformers.file_utils import is_tf_available, is_torch_available
+from transformers.file_utils import is_torch_available
 from transformers.pipelines import Pipeline
 
 from sagemaker_huggingface_inference_toolkit.diffusers_utils import get_diffusers_pipeline, is_diffusers_available
@@ -28,10 +28,6 @@ from sagemaker_huggingface_inference_toolkit.optimum_utils import (
     get_optimum_neuron_pipeline,
     is_optimum_neuron_available,
 )
-
-
-if is_tf_available():
-    import tensorflow as tf
 
 if is_torch_available():
     import torch
@@ -121,9 +117,7 @@ def _is_gpu_available():
     """
     checks if a gpu is available.
     """
-    if is_tf_available():
-        return True if len(tf.config.list_physical_devices("GPU")) > 0 else False
-    elif is_torch_available():
+    if is_torch_available():
         return torch.cuda.is_available()
     else:
         raise RuntimeError(
@@ -139,8 +133,6 @@ def _get_framework():
     """
     if is_torch_available():
         return "pytorch"
-    elif is_tf_available():
-        return "tensorflow"
     else:
         raise RuntimeError(
             "At least one of TensorFlow 2.0 or PyTorch should be installed. "
