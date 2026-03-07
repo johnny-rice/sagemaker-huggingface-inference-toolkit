@@ -29,6 +29,7 @@ from sagemaker_huggingface_inference_toolkit.optimum_utils import (
     is_optimum_neuron_available,
 )
 
+
 if is_torch_available():
     import torch
 
