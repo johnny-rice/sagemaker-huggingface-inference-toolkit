@@ -26,7 +26,6 @@ from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     infer_task_from_model_architecture,
 )
 
-
 MODEL = "lysandre/tiny-bert-random"
 TASK = "text-classification"
 TASK_MODEL = "sshleifer/tiny-dbmdz-bert-large-cased-finetuned-conll03-english"

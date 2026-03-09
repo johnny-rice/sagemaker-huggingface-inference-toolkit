@@ -18,7 +18,6 @@ from sagemaker_inference.environment import model_dir
 from mock import patch
 from sagemaker_huggingface_inference_toolkit import mms_model_server, transformers_utils
 
-
 PYTHON_PATH = "python_path"
 DEFAULT_CONFIGURATION = "default_configuration"
 

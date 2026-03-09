@@ -31,7 +31,6 @@ from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     infer_task_from_model_architecture,
 )
 
-
 ENABLE_MULTI_MODEL = os.getenv("SAGEMAKER_MULTI_MODEL", "false") == "true"
 PYTHON_PATH_ENV = "PYTHONPATH"
 MODEL_FN = "model_fn"

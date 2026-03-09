@@ -17,7 +17,6 @@ from retrying import retry
 
 from sagemaker_huggingface_inference_toolkit import handler_service, mms_model_server
 
-
 HANDLER_SERVICE = handler_service.__name__
 
 

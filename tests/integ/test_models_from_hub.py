@@ -11,7 +11,6 @@ from integ.utils import clean_up, timeout_and_delete_by_name, track_infer_time
 from sagemaker import Session
 from sagemaker.model import Model
 
-
 os.environ["AWS_DEFAULT_REGION"] = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 SAGEMAKER_EXECUTION_ROLE = os.environ.get("SAGEMAKER_EXECUTION_ROLE", "sagemaker_execution_role")
 

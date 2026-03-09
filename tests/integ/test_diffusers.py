@@ -8,7 +8,6 @@ from PIL import Image
 from sagemaker import Session
 from sagemaker.model import Model
 
-
 os.environ["AWS_DEFAULT_REGION"] = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 SAGEMAKER_EXECUTION_ROLE = os.environ.get("SAGEMAKER_EXECUTION_ROLE", "sagemaker_execution_role")
 
