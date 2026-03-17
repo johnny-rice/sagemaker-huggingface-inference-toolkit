@@ -23,8 +23,6 @@
 
 
 from __future__ import absolute_import
-import os
-from datetime import date
 from setuptools import find_packages, setup
 
 # We don't declare our dependency on transformers here because we build with
@@ -49,13 +47,14 @@ install_requires = [
     "librosa",
     "pyctcdecode>=0.3.0",
     "phonemizer",
+    "setuptools<82.0.0",
 ]
 
 extras = {}
 
 # Hugging Face specific dependencies
-extras["transformers"] = ["transformers[sklearn,sentencepiece]>=5.0.0"]
-extras["diffusers"] = ["diffusers>=0.36.0"]
+extras["transformers"] = ["transformers[sklearn,sentencepiece,accelerate]>=5.0.0"]
+extras["diffusers"] = ["diffusers>=0.37.0"]
 
 # framework specific dependencies
 extras["torch"] = ["torch>=1.8.0", "torchaudio"]
@@ -85,7 +84,9 @@ extras["quality"] = [
     "flake8>=3.8.3",
 ]
 
-extras["dev"] = extras["transformers"] + extras["mms"] + extras["torch"] + extras["diffusers"]
+extras["dev"] = (
+    extras["transformers"] + extras["mms"] + extras["torch"] + extras["diffusers"]
+)
 setup(
     name="sagemaker-huggingface-inference-toolkit",
     version=VERSION,
@@ -102,7 +103,9 @@ setup(
     packages=find_packages(where="src"),
     install_requires=install_requires,
     extras_require=extras,
-    entry_points={"console_scripts": "serve=sagemaker_huggingface_inference_toolkit.serving:main"},
+    entry_points={
+        "console_scripts": "serve=sagemaker_huggingface_inference_toolkit.serving:main"
+    },
     python_requires=">=3.10.0",
     license="Apache License 2.0",
     classifiers=[
