@@ -23,8 +23,6 @@
 
 
 from __future__ import absolute_import
-import os
-from datetime import date
 from setuptools import find_packages, setup
 
 # We don't declare our dependency on transformers here because we build with
@@ -49,19 +47,17 @@ install_requires = [
     "librosa",
     "pyctcdecode>=0.3.0",
     "phonemizer",
+    "setuptools<82.0.0",
 ]
 
 extras = {}
 
 # Hugging Face specific dependencies
-extras["transformers"] = ["transformers[sklearn,sentencepiece]>=4.17.0"]
-extras["diffusers"] = ["diffusers>=0.23.0"]
+extras["transformers"] = ["transformers[sklearn,sentencepiece,accelerate]>=5.0.0"]
+extras["diffusers"] = ["diffusers>=0.37.0"]
 
 # framework specific dependencies
 extras["torch"] = ["torch>=1.8.0", "torchaudio"]
-
-# TODO: Remove upper bound of TF 2.11 once transformers release contains this fix: https://github.com/huggingface/evaluate/pull/372
-extras["tensorflow"] = ["tensorflow>=2.4.0,<2.11"]
 
 # MMS Server dependencies
 extras["mms"] = ["multi-model-server>=1.1.4", "retrying"]
@@ -74,7 +70,7 @@ extras["test"] = [
     "psutil",
     "datasets",
     "pytest-sugar",
-    "black==21.4b0",
+    "black==22.3.0",
     "sagemaker",
     "boto3",
     "mock==2.0.0",
@@ -83,12 +79,14 @@ extras["test"] = [
 extras["benchmark"] = ["boto3", "locust"]
 
 extras["quality"] = [
-    "black>=21.10",
+    "black>=22.3.0",
     "isort>=5.5.4",
     "flake8>=3.8.3",
 ]
 
-extras["dev"] = extras["transformers"] + extras["mms"] + extras["torch"] + extras["tensorflow"] + extras["diffusers"]
+extras["dev"] = (
+    extras["transformers"] + extras["mms"] + extras["torch"] + extras["diffusers"]
+)
 setup(
     name="sagemaker-huggingface-inference-toolkit",
     version=VERSION,
@@ -105,8 +103,10 @@ setup(
     packages=find_packages(where="src"),
     install_requires=install_requires,
     extras_require=extras,
-    entry_points={"console_scripts": "serve=sagemaker_huggingface_inference_toolkit.serving:main"},
-    python_requires=">=3.6.0",
+    entry_points={
+        "console_scripts": "serve=sagemaker_huggingface_inference_toolkit.serving:main"
+    },
+    python_requires=">=3.10.0",
     license="Apache License 2.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -116,8 +116,9 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
 )

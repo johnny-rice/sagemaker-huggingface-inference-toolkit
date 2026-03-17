@@ -11,7 +11,6 @@ from integ.utils import clean_up, timeout_and_delete_by_name, track_infer_time
 from sagemaker import Session
 from sagemaker.model import Model
 
-
 os.environ["AWS_DEFAULT_REGION"] = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 SAGEMAKER_EXECUTION_ROLE = os.environ.get("SAGEMAKER_EXECUTION_ROLE", "sagemaker_execution_role")
 
@@ -36,9 +35,9 @@ def get_framework_ecr_image(registry_id="763104351884", repository_name="hugging
 
     images = get_all_ecr_images(registry_id=registry_id, repository_name=repository_name, result_key="imageIds")
     image_tags = [image["imageTag"] for image in images]
-    image_regex = re.compile("\d\.\d\.\d-" + device + "-.{4}$")
+    image_regex = re.compile(rf"\d\.\d\.\d-{device}-.{{4}}$")
     tag = sorted(list(filter(image_regex.match, image_tags)), reverse=True)[0]
-    return f"{registry_id}.dkr.ecr.{os.environ.get('AWS_DEFAULT_REGION','us-east-1')}.amazonaws.com/{repository_name}:{tag}"
+    return f"{registry_id}.dkr.ecr.{os.environ.get('AWS_DEFAULT_REGION', 'us-east-1')}.amazonaws.com/{repository_name}:{tag}"
 
 
 @pytest.mark.parametrize(
@@ -60,7 +59,7 @@ def get_framework_ecr_image(registry_id="763104351884", repository_name="hugging
 )
 @pytest.mark.parametrize(
     "framework",
-    ["pytorch", "tensorflow"],
+    ["pytorch"],
 )
 @pytest.mark.parametrize(
     "device",

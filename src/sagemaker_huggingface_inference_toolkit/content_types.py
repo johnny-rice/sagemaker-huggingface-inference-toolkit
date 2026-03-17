@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """This module contains constants that define MIME content types."""
+
 # Default Mime-Types
 JSON = "application/json"
 CSV = "text/csv"

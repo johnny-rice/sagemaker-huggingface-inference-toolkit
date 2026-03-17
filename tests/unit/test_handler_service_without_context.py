@@ -24,7 +24,6 @@ from mms.metrics.metrics_store import MetricsStore
 from sagemaker_huggingface_inference_toolkit import handler_service
 from sagemaker_huggingface_inference_toolkit.transformers_utils import _load_model_from_hub, get_pipeline
 
-
 TASK = "text-classification"
 MODEL = "sshleifer/tiny-dbmdz-bert-large-cased-finetuned-conll03-english"
 INPUT = {"inputs": "My name is Wolfgang and I live in Berlin"}

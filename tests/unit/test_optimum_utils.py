@@ -24,7 +24,6 @@ from sagemaker_huggingface_inference_toolkit.optimum_utils import (
 )
 from sagemaker_huggingface_inference_toolkit.transformers_utils import _load_model_from_hub
 
-
 require_inferentia = pytest.mark.skipif(
     not is_optimum_neuron_available(),
     reason="Skipping tests, since optimum neuron is not available or not running on inf2 instances.",

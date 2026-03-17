@@ -14,8 +14,7 @@
 import os
 import tempfile
 
-from transformers.file_utils import is_torch_available
-from transformers.testing_utils import require_tf, require_torch, slow
+from transformers.testing_utils import require_torch, slow
 
 from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     _build_storage_path,
@@ -26,7 +25,6 @@ from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     infer_task_from_hub,
     infer_task_from_model_architecture,
 )
-
 
 MODEL = "lysandre/tiny-bert-random"
 TASK = "text-classification"
@@ -98,15 +96,6 @@ def test_gpu_available():
 def test_get_framework_pytorch():
     framework = _get_framework()
     assert framework == "pytorch"
-
-
-@require_tf
-def test_get_framework_tensorflow():
-    framework = _get_framework()
-    if is_torch_available():
-        assert framework == "pytorch"
-    else:
-        assert framework == "tensorflow"
 
 
 def test_get_pipeline():

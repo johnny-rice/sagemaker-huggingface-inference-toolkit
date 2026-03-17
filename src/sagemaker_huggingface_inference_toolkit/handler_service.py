@@ -31,7 +31,6 @@ from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     infer_task_from_model_architecture,
 )
 
-
 ENABLE_MULTI_MODEL = os.getenv("SAGEMAKER_MULTI_MODEL", "false") == "true"
 PYTHON_PATH_ENV = "PYTHONPATH"
 MODEL_FN = "model_fn"
@@ -248,7 +247,7 @@ class HuggingFaceHandlerService(ABC):
         try:
             if not self.initialized:
                 if self.attempted_init:
-                    logger.warn(
+                    logger.warning(
                         "Model is not initialized, will try to load model again.\n"
                         "Please consider increase wait time for model loading.\n"
                     )
@@ -366,7 +365,10 @@ class HuggingFaceHandlerService(ABC):
         else:
             raise TypeError(
                 "{} definition takes {} or {} arguments but {} were given.".format(
-                    func.__name__, num_default_func_input - 1, num_default_func_input, num_func_input
+                    func.__name__,
+                    num_default_func_input - 1,
+                    num_default_func_input,
+                    num_func_input,
                 )
             )
         return extra_args

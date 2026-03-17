@@ -20,18 +20,17 @@ from typing import Optional
 
 from huggingface_hub import HfApi, login, snapshot_download
 from transformers import AutoTokenizer, pipeline
-from transformers.file_utils import is_tf_available, is_torch_available
+from transformers.file_utils import is_torch_available
 from transformers.pipelines import Pipeline
 
-from sagemaker_huggingface_inference_toolkit.diffusers_utils import get_diffusers_pipeline, is_diffusers_available
+from sagemaker_huggingface_inference_toolkit.diffusers_utils import (
+    get_diffusers_pipeline,
+    is_diffusers_available,
+)
 from sagemaker_huggingface_inference_toolkit.optimum_utils import (
     get_optimum_neuron_pipeline,
     is_optimum_neuron_available,
 )
-
-
-if is_tf_available():
-    import tensorflow as tf
 
 if is_torch_available():
     import torch
@@ -121,9 +120,7 @@ def _is_gpu_available():
     """
     checks if a gpu is available.
     """
-    if is_tf_available():
-        return True if len(tf.config.list_physical_devices("GPU")) > 0 else False
-    elif is_torch_available():
+    if is_torch_available():
         return torch.cuda.is_available()
     else:
         raise RuntimeError(
@@ -139,8 +136,6 @@ def _get_framework():
     """
     if is_torch_available():
         return "pytorch"
-    elif is_tf_available():
-        return "tensorflow"
     else:
         raise RuntimeError(
             "At least one of TensorFlow 2.0 or PyTorch should be installed. "
@@ -165,14 +160,17 @@ def _build_storage_path(model_id: str, model_dir: Path, revision: Optional[str] 
 
 
 def _load_model_from_hub(
-    model_id: str, model_dir: Path, revision: Optional[str] = None, use_auth_token: Optional[str] = None
+    model_id: str,
+    model_dir: Path,
+    revision: Optional[str] = None,
+    use_auth_token: Optional[str] = None,
 ):
     """
     Downloads a model repository at the specified revision from the Hugging Face Hub.
     All files are nested inside a folder in order to keep their actual filename
     relative to that folder. `org__model.revision`
     """
-    logger.warn(
+    logger.warning(
         "This is an experimental beta features, which allows downloading model from the Hugging Face Hub on start up. "
         "It loads the model defined in the env var `HF_MODEL_ID`"
     )
@@ -201,7 +199,6 @@ def _load_model_from_hub(
         model_id,
         revision=revision,
         local_dir=str(storage_folder),
-        local_dir_use_symlinks=False,
         ignore_patterns=ignore_regex,
     )
 
@@ -288,7 +285,11 @@ def get_pipeline(task: str, device: int, model_dir: Path, **kwargs) -> Pipeline:
     else:
         # load pipeline
         hf_pipeline = pipeline(
-            task=task, model=model_dir, device=device, trust_remote_code=TRUST_REMOTE_CODE, **kwargs
+            task=task,
+            model=model_dir,
+            device=device,
+            trust_remote_code=TRUST_REMOTE_CODE,
+            **kwargs,
         )
 
     return hf_pipeline

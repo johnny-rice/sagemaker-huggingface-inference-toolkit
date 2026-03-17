@@ -22,7 +22,6 @@ from mms.service import PredictionException
 from PIL import Image
 from sagemaker_huggingface_inference_toolkit import decoder_encoder
 
-
 ENCODE_JSON_INPUT = {"upper": [1425], "lower": [576], "level": [2], "datetime": ["2012-08-08 15:30"]}
 ENCODE_CSV_INPUT = [
     {"answer": "Nuremberg", "end": 42, "score": 0.9926825761795044, "start": 33},

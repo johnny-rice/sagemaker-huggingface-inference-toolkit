@@ -8,7 +8,6 @@ from time import time
 
 from botocore.exceptions import ClientError
 
-
 LOGGER = logging.getLogger("timeout")
 
 

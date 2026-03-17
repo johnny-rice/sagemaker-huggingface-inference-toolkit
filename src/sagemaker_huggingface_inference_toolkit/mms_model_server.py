@@ -40,7 +40,6 @@ from sagemaker_huggingface_inference_toolkit.transformers_utils import (
     _load_model_from_hub,
 )
 
-
 logger = logging.get_logger()
 
 DEFAULT_HANDLER_SERVICE = handler_service.__name__

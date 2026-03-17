@@ -14,7 +14,6 @@ from integ.utils import (
     validate_zero_shot_classification,
 )
 
-
 task2model = {
     "text-classification": {
         "pytorch": "distilbert-base-uncased-finetuned-sst-2-english",
