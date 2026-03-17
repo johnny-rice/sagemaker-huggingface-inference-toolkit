@@ -151,9 +151,7 @@ def _build_storage_path(model_id: str, model_dir: Path, revision: Optional[str] 
     if "/" and revision is None:
         storage_path = os.path.join(model_dir, model_id.replace("/", REPO_ID_SEPARATOR))
     elif "/" and revision is not None:
-        storage_path = os.path.join(
-            model_dir, model_id.replace("/", REPO_ID_SEPARATOR) + "." + revision
-        )
+        storage_path = os.path.join(model_dir, model_id.replace("/", REPO_ID_SEPARATOR) + "." + revision)
     elif revision is not None:
         storage_path = os.path.join(model_dir, model_id + "." + revision)
     else:
@@ -188,9 +186,7 @@ def _load_model_from_hub(
     # check if safetensors weights are available
     if framework == "pytorch":
         files = HfApi().model_info(model_id).siblings
-        if is_optimum_neuron_available() and any(
-            f.rfilename.endswith("neuron") for f in files
-        ):
+        if is_optimum_neuron_available() and any(f.rfilename.endswith("neuron") for f in files):
             framework = "neuronx"
         elif any(f.rfilename.endswith("safetensors") for f in files):
             framework = "safetensors"
@@ -209,9 +205,7 @@ def _load_model_from_hub(
     return storage_folder
 
 
-def infer_task_from_model_architecture(
-    model_config_path: str, architecture_index=0
-) -> str:
+def infer_task_from_model_architecture(model_config_path: str, architecture_index=0) -> str:
     """
     Infer task from `config.json` of trained model. It is not guaranteed to the detect, e.g. some models implement multiple architectures or
     trainend on different tasks https://huggingface.co/facebook/bart-large/blob/main/config.json. Should work for every on Amazon SageMaker fine-tuned model.
@@ -237,24 +231,19 @@ def infer_task_from_model_architecture(
     return task
 
 
-def infer_task_from_hub(
-    model_id: str, revision: Optional[str] = None, use_auth_token: Optional[str] = None
-) -> str:
+def infer_task_from_hub(model_id: str, revision: Optional[str] = None, use_auth_token: Optional[str] = None) -> str:
     """
     Infer task from Hub by extracting `pipeline_tag` for model_info.
     """
     _api = HfApi()
-    model_info = _api.model_info(
-        repo_id=model_id, revision=revision, token=use_auth_token
-    )
+    model_info = _api.model_info(repo_id=model_id, revision=revision, token=use_auth_token)
     if model_info.pipeline_tag is not None:
         # set env to work with
         os.environ["HF_TASK"] = model_info.pipeline_tag
         return model_info.pipeline_tag
     else:
         raise ValueError(
-            f"Task couldn't be inferenced from {model_info.pipeline_tag}."
-            "Use env `HF_TASK` to define your task."
+            f"Task couldn't be inferenced from {model_info.pipeline_tag}." "Use env `HF_TASK` to define your task."
         )
 
 
@@ -281,11 +270,7 @@ def get_pipeline(task: str, device: int, model_dir: Path, **kwargs) -> Pipeline:
     # check if optimum neuron is available and tries to load it
     if is_optimum_neuron_available():
         hf_pipeline = get_optimum_neuron_pipeline(task=task, model_dir=model_dir)
-    elif (
-        TRUST_REMOTE_CODE
-        and os.environ.get("HF_MODEL_ID", None) is not None
-        and device == 0
-    ):
+    elif TRUST_REMOTE_CODE and os.environ.get("HF_MODEL_ID", None) is not None and device == 0:
         tokenizer = AutoTokenizer.from_pretrained(os.environ["HF_MODEL_ID"])
 
         hf_pipeline = pipeline(
@@ -296,9 +281,7 @@ def get_pipeline(task: str, device: int, model_dir: Path, **kwargs) -> Pipeline:
             model_kwargs={"device_map": "auto", "torch_dtype": "auto"},
         )
     elif is_diffusers_available() and task == "text-to-image":
-        hf_pipeline = get_diffusers_pipeline(
-            task=task, model_dir=model_dir, device=device, **kwargs
-        )
+        hf_pipeline = get_diffusers_pipeline(task=task, model_dir=model_dir, device=device, **kwargs)
     else:
         # load pipeline
         hf_pipeline = pipeline(

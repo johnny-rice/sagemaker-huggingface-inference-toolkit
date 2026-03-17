@@ -118,19 +118,13 @@ class HuggingFaceHandlerService(ABC):
         """
         # gets pipeline from task tag
         if "HF_TASK" in os.environ:
-            hf_pipeline = get_pipeline(
-                task=os.environ["HF_TASK"], model_dir=model_dir, device=self.device
-            )
+            hf_pipeline = get_pipeline(task=os.environ["HF_TASK"], model_dir=model_dir, device=self.device)
         elif "config.json" in os.listdir(model_dir):
             task = infer_task_from_model_architecture(f"{model_dir}/config.json")
-            hf_pipeline = get_pipeline(
-                task=task, model_dir=model_dir, device=self.device
-            )
+            hf_pipeline = get_pipeline(task=task, model_dir=model_dir, device=self.device)
         elif "model_index.json" in os.listdir(model_dir):
             task = "text-to-image"
-            hf_pipeline = get_pipeline(
-                task=task, model_dir=model_dir, device=self.device
-            )
+            hf_pipeline = get_pipeline(task=task, model_dir=model_dir, device=self.device)
         else:
             raise ValueError(
                 f"You need to define one of the following {list(SUPPORTED_TASKS.keys())} or text-to-image as env 'HF_TASK'.",
@@ -221,15 +215,11 @@ class HuggingFaceHandlerService(ABC):
         """
         # run pipeline
         start_time = time.time()
-        processed_data = self.preprocess(
-            *([input_data, content_type] + self.preprocess_extra_arg)
-        )
+        processed_data = self.preprocess(*([input_data, content_type] + self.preprocess_extra_arg))
         preprocess_time = time.time() - start_time
         predictions = self.predict(*([processed_data, model] + self.predict_extra_arg))
         predict_time = time.time() - preprocess_time - start_time
-        response = self.postprocess(
-            *([predictions, accept] + self.postprocess_extra_arg)
-        )
+        response = self.postprocess(*([predictions, accept] + self.postprocess_extra_arg))
         postprocess_time = time.time() - predict_time - preprocess_time - start_time
 
         logger.info(
@@ -276,17 +266,10 @@ class HuggingFaceHandlerService(ABC):
                 input_data = input_data.decode("utf-8")
 
             predict_start = time.time()
-            response = self.transform_fn(
-                *(
-                    [self.model, input_data, content_type, accept]
-                    + self.transform_extra_arg
-                )
-            )
+            response = self.transform_fn(*([self.model, input_data, content_type, accept] + self.transform_extra_arg))
             predict_end = time.time()
 
-            context.metrics.add_time(
-                "Transform Fn", round((predict_end - predict_start) * 1000, 2)
-            )
+            context.metrics.add_time("Transform Fn", round((predict_end - predict_start) * 1000, 2))
 
             context.set_response_content_type(0, accept)
             return [response]
@@ -300,11 +283,7 @@ class HuggingFaceHandlerService(ABC):
         """
         user_module_name = self.environment.module_name
         if importlib.util.find_spec(user_module_name) is not None:
-            logger.info(
-                "Inference script implementation found at `{}`.".format(
-                    user_module_name
-                )
-            )
+            logger.info("Inference script implementation found at `{}`.".format(user_module_name))
             user_module = importlib.import_module(user_module_name)
 
             load_fn = getattr(user_module, MODEL_FN, None)
@@ -321,9 +300,7 @@ class HuggingFaceHandlerService(ABC):
                 )
             self.log_func_implementation_found_or_not(load_fn, MODEL_FN)
             if load_fn is not None:
-                self.load_extra_arg = self.function_extra_arg(
-                    HuggingFaceHandlerService.load, load_fn
-                )
+                self.load_extra_arg = self.function_extra_arg(HuggingFaceHandlerService.load, load_fn)
                 self.load = load_fn
             self.log_func_implementation_found_or_not(preprocess_fn, INPUT_FN)
             if preprocess_fn is not None:
@@ -333,9 +310,7 @@ class HuggingFaceHandlerService(ABC):
                 self.preprocess = preprocess_fn
             self.log_func_implementation_found_or_not(predict_fn, PREDICT_FN)
             if predict_fn is not None:
-                self.predict_extra_arg = self.function_extra_arg(
-                    HuggingFaceHandlerService.predict, predict_fn
-                )
+                self.predict_extra_arg = self.function_extra_arg(HuggingFaceHandlerService.predict, predict_fn)
                 self.predict = predict_fn
             self.log_func_implementation_found_or_not(postprocess_fn, OUTPUT_FN)
             if postprocess_fn is not None:
@@ -359,11 +334,7 @@ class HuggingFaceHandlerService(ABC):
     @staticmethod
     def log_func_implementation_found_or_not(func, func_name):
         if func is not None:
-            logger.info(
-                "`{}` implementation found. It will be used in place of the default one.".format(
-                    func_name
-                )
-            )
+            logger.info("`{}` implementation found. It will be used in place of the default one.".format(func_name))
         else:
             logger.info(
                 "No `{}` implementation was found. The default one from the handler service will be used.".format(
